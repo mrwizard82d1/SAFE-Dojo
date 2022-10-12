@@ -229,7 +229,7 @@ let navbar =
                             ]
                             Html.span [
                                 prop.style [ style.color.white ]
-                                prop.text "SAFE Dojo"
+                                prop.text "SAFE Gi"
                             ]
                         ]
                     ]

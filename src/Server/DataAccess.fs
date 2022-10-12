@@ -24,7 +24,8 @@ module GeoLocation =
               Longitude = float postcode.Result.Longitude }
         let location =
             { LatLong = latLong
-              Town = postcode.Result.AdminDistrict
+              Town = "A Town"
+              // Town = postcode.Result.AdminDistrict
               Region = postcode.Result.Nuts }
         return location }
 

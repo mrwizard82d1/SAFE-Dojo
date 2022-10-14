@@ -146,13 +146,16 @@ module ViewParts =
         ]
 
     let mapWidget (lr:LocationResponse) =
+        let latLongFromLocation (locResp:LocationResponse) =
+            (locResp.Location.LatLong.Latitude, locResp.Location.LatLong.Longitude)
+
         widget "Map"  [
                 PigeonMaps.map [
-                    map.center (lr.Location.LatLong.Latitude, lr.Location.LatLong.Longitude)
+                    map.center (latLongFromLocation lr)
                     map.zoom 15
                     map.height 500
                     map.markers [
-                        (* Task 3.4 MAP: Create a marker for the map. Use the makeMarker function above. *)
+                        makeMarker (latLongFromLocation lr)
                     ]
             ]
         ]

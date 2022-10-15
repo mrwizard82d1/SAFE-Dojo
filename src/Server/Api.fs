@@ -34,15 +34,9 @@ let private asWeatherResponse (weather: Weather.OpenMeteoCurrentWeather.CurrentW
       Temperature = float weather.Temperature }
 
 let getWeather postcode = async {
-    (* Task 4.1 WEATHER: Implement a function that retrieves the weather for
-       the given postcode. Use the GeoLocation.getLocation, Weather.getWeatherForPosition and
-       asWeatherResponse functions to create and return a WeatherResponse instead of the stub.
-       Don't forget to use let! instead of let to "await" the Task. *)
-
-    let emptyWeather =
-        { WeatherType = WeatherType.Clear
-          Temperature = 0. }
-    return emptyWeather
+    let! location = getLocation postcode
+    let! weatherResponse = getWeatherForPosition location.LatLong
+    asWeatherResponse weatherResponse
 }
 
 let dojoApi =

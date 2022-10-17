@@ -14,7 +14,8 @@ open Shared
 /// The different elements of the completed report.
 type Report =
     { Location: LocationResponse
-      Crimes: CrimeResponse array }
+      Crimes: CrimeResponse array
+      Weather: WeatherResponse }
 
 type ServerState =
     | Idle
@@ -50,13 +51,15 @@ let dojoApi =
 let getResponse postcode = async {
     let! location = dojoApi.GetDistance postcode
     let! crimes = dojoApi.GetCrimes postcode
+    let! weather = dojoApi.GetWeather postcode
     (* Task 4.4 WEATHER: Fetch the weather from the API endpoint you created.
        Then, save its value into the Report below. You'll need to add a new
        field to the Report type first, though! *)
 
     return
         { Location = location
-          Crimes = crimes }
+          Crimes = crimes
+          Weather = weather }
 }
 
 /// The update function knows how to update the model given a message.
@@ -167,7 +170,7 @@ module ViewParts =
                     prop.children [
                         Html.img [
                             prop.style [ style.height 100]
-                            prop.src (sprintf "https://raw.githubusercontent.com/erikflowers/weather-icons/master/svg/wi-%s.svg" weatherReport.WeatherType.IconName) ]
+                            prop.src $"https://raw.githubusercontent.com/erikflowers/weather-icons/master/svg/wi-%s{weatherReport.WeatherType.IconName}.svg" ]
                         ]
                     ]
                 Bulma.table [
@@ -182,7 +185,7 @@ module ViewParts =
                                    and display it here instead of an empty string.
                                    Hint: Use sprintf with "%.2f" to round the temperature to 2 decimal points
                                    (look at the locationWidget for an example) *)
-                                Html.td ""
+                                Html.td $"%0.2f{weatherReport.Temperature} \u00b0C"
                             ]
                         ]
                     ]
@@ -342,12 +345,9 @@ let view (model: Model) dispatch =
                                         ]
                                     ]
                                     Bulma.column [
-                                        (* Task 4.5 WEATHER: Generate the view code for the weather tile
-                                           using the weatherWidget function, supplying the weather data
-                                           from the report value, and include it here as part of the list *)
+                                        weatherWidget report.Weather
                                     ]
                                 ]
-                                (* Include the map for the specified location *)
                                 mapWidget report.Location
                             ]
                         ]

@@ -34,15 +34,17 @@ let private asWeatherResponse (weather: Weather.OpenMeteoCurrentWeather.CurrentW
       Temperature = float weather.Temperature }
 
 let getWeather postcode = async {
+    // Lookup the location information for the specified postal code
     let! location = getLocation postcode
     let! weatherResponse = getWeatherForPosition location.LatLong
-    asWeatherResponse weatherResponse
+    return asWeatherResponse weatherResponse
 }
 
 let dojoApi =
-    { GetDistance = getDistanceFromLondon
+    {
+      GetDistance = getDistanceFromLondon
 
       GetCrimes = getCrimeReport
 
-      (* Task 4.2 WEATHER: Hook up the weather endpoint to the getWeather function. *)
+      GetWeather = getWeather
     }

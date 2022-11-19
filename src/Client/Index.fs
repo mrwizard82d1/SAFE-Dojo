@@ -31,6 +31,7 @@ type Model =
 
 /// The different types of messages in the system.
 type Msg =
+    | Clear
     | GetReport
     | PostcodeChanged of string
     | GotReport of Report
@@ -65,6 +66,12 @@ let getResponse postcode = async {
 /// The update function knows how to update the model given a message.
 let update msg model =
     match msg with
+    | Clear ->
+        { model with
+           Postcode = ""
+           Report = None
+           ValidationError = None
+           ServerState = Idle }, Cmd.none
     | GetReport ->
         match model.ValidationError with
         | None ->
@@ -322,6 +329,14 @@ let view (model: Model) dispatch =
                                         prop.disabled (model.ValidationError.IsSome)
                                         if (model.ServerState = Loading) then button.isLoading
                                         prop.text "Fetch"
+                                    ]
+                                ]
+                            Bulma.control.div [
+                                    Bulma.button.a [
+                                        color.isWarning
+                                        prop.onClick (fun _ -> dispatch Clear)
+                                        prop.disabled (model.ValidationError.IsSome)
+                                        prop.text "Clear"
                                     ]
                                 ]
                             ]
